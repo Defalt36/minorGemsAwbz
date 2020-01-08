@@ -3805,8 +3805,10 @@ void GameSceneHandler::keyPressed(
         // escape only
 
         if( inKey == 27 ) {
-            // escape always toggles pause
-            mPaused = !mPaused;
+            // escape never toggles pause
+            // just exit
+            //mPaused = !mPaused;
+            exit( 0 );
             }
         }
     else {

@@ -679,7 +679,9 @@ class ScreenGL {
         
         // FOVMOD NOTE:  Change 2/3 - Take these lines during the merge process
         int getLastMouseButton() {
-            return mLastMouseButton;
+            int ret = mLastMouseButton;
+            mLastMouseButton = MouseButton::NONE;
+            return ret;
         }
 
 
