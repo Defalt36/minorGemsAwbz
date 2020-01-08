@@ -1854,9 +1854,10 @@ void ScreenGL::start() {
                     SDL_WM_GrabInput( SDL_GRAB_ON );
                     }
                 }
-            // map CTRL-q to ESC
+            /*/ map CTRL-q to ESC
             // 17 is "DC1" which is ctrl-q on some platforms
             else if( event.type == SDL_KEYDOWN &&
+                
                      ( ( event.key.keysym.sym == SDLK_q
                          &&
                          ( ( mods & KMOD_META ) || ( mods & KMOD_ALT )
@@ -1868,8 +1869,9 @@ void ScreenGL::start() {
                 int mouseX, mouseY;
                 SDL_GetMouseState( &mouseX, &mouseY );
                 
-                callbackKeyboard( 27, mouseX, mouseY );    
-                }
+                callbackKeyboard( 27, mouseX, mouseY );  
+                
+                }//*/  
             else {
                 
 
