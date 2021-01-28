@@ -5,14 +5,53 @@
 #include "minorGems/game/gameGraphics.h"
 #include "minorGems/util/SimpleVector.h"
 
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#include <ft2build.h>
+#include <freetype/ftglyph.h>
 
 enum TextAlignment {
     alignCenter = 0,
     alignRight,
     alignLeft 
     };
+	
+	
+struct xCharTexture  
+{  
+    GLuint  m_texID;  
+    wchar_t m_chaID;  
+    int     m_Width;  
+    int     m_Height;  
 
+    int     m_adv_x;  
+    int     m_adv_y;  
+    int     m_delta_x;  
+    int     m_delta_y;  
+public:  
+    xCharTexture()  
+    {  
+        m_texID  = 0;  
+        m_chaID  = 0;  
+        m_Width  = 0;  
+        m_Height = 0;  
+    }  
+};  
 
+class xFreeTypeLib  
+{  
+    FT_Library m_FT2Lib;  
+    FT_Face    m_FT_Face;  
+
+public:  
+    int   m_w;  
+    int   m_h;  
+	xCharTexture mCharTexure[65536];
+    void load(const char* font_file , int _w , int _h);  
+    GLuint loadChar(wchar_t ch);  
+};  
+	
 
 // a table for a given character
 // extra kerning offsets for each character that could follow
@@ -51,6 +90,7 @@ class Font {
 
 
         double measureString( const char *inString, int inCharLimit = -1 );
+		int measureStringHeight(wchar_t* _strText);
         
         // gets per-character position of string without drawing it
         double getCharPos( SimpleVector<doublePair> *outPositions,
@@ -132,6 +172,11 @@ class Font {
         char mEnableKerning;
 
         double mMinimumPositionPrecision;
+		
+		xFreeTypeLib mFreeTypeLib;
+
+		xCharTexture* getCharTexture(wchar_t ch);
+		void drawText(wchar_t* _strText,int x , int y, int maxW , int h, TextAlignment align);
     };
 
 

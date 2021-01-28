@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <math.h>
+#include <libseh/seh.h>
 
 
 // let SDL override our main function with SDLMain
@@ -23,6 +24,13 @@ int main( int inArgCount, char **inArgs ) {
     return mainFunction( inArgCount, inArgs );
     }
 
+DWORD exc_filter(DWORD code, DWORD filtercode)
+{
+    if(code == filtercode)
+        return EXCEPTION_EXECUTE_HANDLER;
+
+    return EXCEPTION_CONTINUE_SEARCH;
+}
 
 #include <SDL/SDL.h>
 
@@ -3166,7 +3174,15 @@ void GameSceneHandler::drawScene() {
         // don't update while paused
         char update = !mPaused;
         
-        drawFrame( update );
+        __libseh_try {
+
+            drawFrame( update );
+        }
+        __libseh_except(exc_filter(__libseh_get_exception_code(), EXCEPTION_ACCESS_VIOLATION))
+        {
+            printf( "Caught violation exception\n");
+        }
+        __libseh_end_except
         
         if( cursorMode > 0 ) {
             // draw emulated cursor
@@ -3789,8 +3805,10 @@ void GameSceneHandler::keyPressed(
         // escape only
 
         if( inKey == 27 ) {
-            // escape always toggles pause
-            mPaused = !mPaused;
+            // escape never toggles pause
+            // just exit
+            //mPaused = !mPaused;
+            exit( 0 );
             }
         }
     else {

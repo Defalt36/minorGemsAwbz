@@ -674,12 +674,16 @@ class ScreenGL {
         
 
         char isLastMouseButtonRight() {
-            return mLastMouseButtonRight;
+            char tmp = mLastMouseButtonRight;
+            mLastMouseButtonRight = false;
+            return tmp;
             }
         
         // FOVMOD NOTE:  Change 2/3 - Take these lines during the merge process
         int getLastMouseButton() {
-            return mLastMouseButton;
+            int ret = mLastMouseButton;
+            mLastMouseButton = MouseButton::NONE;
+            return ret;
         }
 
 
